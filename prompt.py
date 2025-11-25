@@ -1,76 +1,121 @@
 import random
-
 import random_string
 
+from typing import List, Optional
+
 categories = [
-    "Relationship & Love – About connection, affection, communication, or growth between partners.",
-    "Personal Growth – Exploring identity, change, goals, or lessons learned.",
-    "Friendship & Social Bonds – About friends, community, belonging, or shared memories.",
-    "Family & Childhood – Roots, upbringing, parents, nostalgia, or family dynamics.",
-    "Fun & Playful – Lighthearted, imaginative, or silly 'what-if' scenarios.",
-    "Life & Purpose – Meaning, direction, ambition, or reflection on existence.",
-    "Creativity & Expression – Art, inspiration, storytelling, and personal creation.",
-    "Mind & Emotions – Feelings, self-awareness, fears, hopes, mental wellbeing.",
-    "Daily Life & Habits – Everyday routines, comfort, small pleasures, productivity.",
-    "Nature & The World – The environment, travel, awe, simplicity, or grounding.",
-    "Time & Memory – Past vs. future, nostalgia, life stages, transformation.",
-    "Sensory & Aesthetic – Beauty, colors, sounds, textures, and sensory awareness.",
-    "Technology & Future – Digital life, innovation, AI, or how the world is changing.",
-    "Philosophy & Wonder – Big ideas, paradoxes, curiosity, or perspective shifts.",
-    "Culture & Society – Human diversity, identity, traditions, and shared experiences.",
-    "Play & Imagination – Creative fantasies, 'make-believe,' or thought experiments.",
-    "Self & Identity – Understanding who we are and how we see ourselves.",
-    "Change & Resilience – Adapting, overcoming, and learning from challenges.",
-    "Joy & Gratitude – Appreciation, happiness, and noticing small miracles.",
-    "Dreams & Aspirations – Vision, hope, and long-term personal or shared dreams."
+    "Romantic Connection – affection, intimacy, how you relate as partners.",
+    "Shared Adventures – trips, challenges, things you did together or want to do.",
+    "Inner Worlds – thoughts, fears, dreams you rarely say out loud.",
+    "Daily Micro-moments – tiny routines, habits, and unnoticed details of the day.",
+    "Conflict & Repair – disagreements, apologies, learning to reconnect.",
+    "Bodies & Sensations – touch, physical presence, comfort, and embodiment.",
+    "Future Visions – plans, hopes, and imagined futures together.",
+    "Play & Imagination – games, fantasies, jokes, and creative scenarios.",
+    "Values & Ethics – what feels right, important, or non-negotiable to you.",
+    "Family & Roots – childhood, parents, origins, and inherited patterns."
 ]
 
 question_types = [
-    "Open-Ended – Invites storytelling, reflection, or detailed answers.",
-    "Yes/No (or Either/Or) – Quick contrast, but still meaningful.",
-    "Photo / Visual Prompt – Encourages a picture, scene, or creative act.",
-    "Choice / Ranking – Small decision or preference that reveals personality.",
-    "Fill-in-the-Blank – Short, expressive responses, often poetic or emotional.",
-    "Memory Recall – Triggering a specific moment or past experience.",
-    "Action / Challenge – Invite the user to do something reflective or creative.",
+    "Deep Reflection – invite a thoughtful, detailed answer.",
+    "Quick Either-Or – offer a clear choice between two paths.",
+    "Photo or Scene Capture – ask them to take or imagine a picture.",
+    "Mini-Challenge – propose a small action or experiment.",
+    "Memory Snapshot – zoom in on one specific past moment.",
+    "Fill-in-the-Blank – short, focused completion of a sentence.",
+    "Wild Hypothetical – a ‘what if’ in an unusual scenario.",
+    "Ranking or Choice – choose or rank among several options.",
 ]
 
 tones = [
-    "Deep / Introspective – Serious, thoughtful, exploring meaning or emotion.",
-    "Playful / Curious – Light, fun, full of imagination or gentle humor.",
-    "Flirty / Romantic – Warm, intimate, expressive of affection or attraction.",
-    "Reflective / Nostalgic – Looking back with emotion or gratitude.",
-    "Poetic / Sensory – Using imagery, beauty, or feeling to evoke emotion.",
-    "Philosophical / Abstract – Big ideas, paradoxes, or imaginative thought.",
-    "Whimsical / Surreal – Dreamlike, creative, unexpected.",
-    "Grounded / Practical – Simple, real, about daily life and balance.",
-    "Hopeful / Optimistic – Bright, uplifting, focusing on growth or gratitude.",
-    "Vulnerable / Honest – Brave, emotional, encouraging openness.",
+    "Tender & Warm – gentle, caring, affectionate.",
+    "Cheerful & Playful – light, fun, slightly goofy.",
+    "Dreamy & Poetic – image-rich, soft, and lyrical.",
+    "Grounded & Practical – clear, simple, down-to-earth.",
+    "Philosophical & Curious – thoughtful, questioning, zooming out.",
+    "Bold & Vulnerable – honest, raw, emotionally brave.",
+    "Mischievous & Flirty – teasing, suggestive, charming.",
+    "Calm & Soothing – reassuring, slow, peaceful.",
 ]
 
-def get_prompt(seed_length = 100):
+mechanics = [
+    "Sensory focus – build the question around smell, sound, or texture.",
+    "Alternate reality – change one simple rule of the world.",
+    "Mini-game – turn the answer into a playful game or rule.",
+    "Time travel – anchor the answer to a very specific moment in time.",
+    "Object spotlight – revolve around one small, physical object.",
+    "Role swap – imagine switching roles, habits, or perspectives.",
+    "Map or space – use locations, borders, or imaginary maps.",
+    "Secret signal – involve codes, inside jokes, or nonverbal cues.",
+]
+
+
+def get_prompt(previous_questions: Optional[List[str]] = None) -> str:
+    seed_text = random_string.get_random_paragraph()
+
+    category = random.choice(categories)
+    q_form = random.choice(question_types)
+    tone = random.choice(tones)
+    mechanic = random.choice(mechanics)
+
+    recent_block = ""
+    if previous_questions:
+        for q in previous_questions[-10:]:
+            recent_block += f"- {q}\n"
+
     prompt = f"""
-    Category: {random.choice(categories)}
-    Question Type: {random.choice(question_types)}
-    Tone: {random.choice(tones)}
-    Creative Randomness Seed:
-    [CHAOTIC_SEED_START] {random_string.get_random_words(seed_length)} [CHAOTIC_SEED_END]
-    Guidelines
-    
-    Your job is to write questions for an application application for couples. The questions will be presented to two people and they will respond to them individually and then see each other's responses. 
-    Write naturally. The question should sound as if it came from a thoughtful, emotionally intelligent person — never robotic or generic.
-    Fit the Category. Shape the question around the chosen topic while keeping it personal, relatable, or thought-provoking.
-    Match the Question Type.
-    Open-Ended: Encourage storytelling, reflection, or imagination.
-    Yes/No: Use clear contrast (e.g., 'Would you rather…' or 'Do you believe…').
-    Photo: Invite a visual or creative response (e.g., 'Capture a photo that shows…').
-    Tone: follow the tonality set by the random choice.
-    Use the Randomness Seed in order to be able to extract a topic or an idea, it doesn't neccesarily have to be related to the topic but you can infer and think of an idea from the seed.
-    Examples provided should not limit your creativity they are provided only to guide and advise you, the final thought on the questions still remains to you.
-    The question should not be longer than 30 words.
-    Output Format:
-    Write only the final question — no explanations, headings, or meta text.
-    
-    [QUESTION]
+    You are a creative writer designing one question for a couples reflection app.
+
+    The two partners will answer separately, then see each other's responses. The question must feel fresh, specific, and emotionally meaningful.
+
+    Here are some previous questions that you have generated in the past, do not repeat the ideas or wording of other questions, all the questions must be unique:
+    <<<Previous questions begin>>>
+    {recent_block}
+    <<<Previous questions end>>>
+
+    ### INPUTS
+
+    - Category (WHAT the question is about):
+      {category}
+
+    - Question form (HOW they answer):
+      {q_form}
+
+    - Tone (EMOTIONAL COLOR of the question):
+      {tone}
+
+    - Mechanic / twist (STRUCTURAL constraint):
+      {mechanic}
+
+    - Random Romanian literary seed (IDEA SOURCE):
+      The following text is a paragraph in Romanian, from a story or fairy tale. Read it and extract 1–3 vivid elements:
+      <<<ROMANIAN_SEED_START>>>
+      {seed_text}
+      <<<ROMANIAN_SEED_END>>>
+
+    ### TASK
+
+    1. Combine the category, form, tone, and mechanic into one coherent question for a couple.
+    2. From the Romanian seed, extract specific images, objects, moods, or situations. Use at least ONE idea clearly inspired by the seed (for example: an object, a place, a feeling, a small scene).
+    3. Make the question:
+       - Written in English.
+       - Addressing the couple, their shared experience, or their life or opinion outside the relationship.
+       - Aligned with the chosen tone and mechanic (for example, if it’s a mini-game, the question should define the game).
+    4. Ensure DIVERSITY:
+       - Avoid repeating themes like “favorite memory” or “small rule you broke” unless the seed truly pushes you there in a new way.
+       - Vary the opening structure: don’t always start with “What” or “When” or “Would you rather”.
+       - Make it feel different in topic, scenario, and phrasing from the recent questions (if any) listed above.
+
+    ### CONSTRAINTS
+
+    - Maximum 30 words.
+    - Natural, human, emotionally intelligent language — never generic or robotic.
+    - One single question only.
+    - No meta-text, no bullet points, no explanations.
+
+    ### OUTPUT
+
+    Write ONLY the final question text, nothing else.
     """
+
     return prompt
