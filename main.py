@@ -44,7 +44,7 @@ def main():
     generated_now: list[str] = []
 
     for i in range(5):
-        prompt_text = prompt.get_prompt(previous_questions)
+        prompt_text = prompt.build_prompt(previous_questions)
 
         response = client.models.generate_content(
             model="gemini-2.5-flash",
