@@ -47,13 +47,14 @@ def main():
         prompt_text = prompt.get_prompt(previous_questions)
 
         response = client.models.generate_content(
-            model="gemini-2.5-pro",
+            model="gemini-2.5-flash",
             contents=prompt_text,
+
             config=GenerateContentConfig(
-                temperature=1.25,
-                top_p=0.9,
-                top_k=40,
-            ),
+                temperature = 0.85,
+                top_p = 0.9,
+                top_k = 40,
+        ),
         )
 
         q = (response.text or "").strip()
