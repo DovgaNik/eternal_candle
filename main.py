@@ -1,10 +1,7 @@
-# main.py
-
 import os
 from pathlib import Path
 
 from google import genai
-from google.genai.types import GenerateContentConfig
 
 import prompt
 
@@ -43,18 +40,12 @@ def main():
 
     generated_now: list[str] = []
 
-    for i in range(5):
+    for i in range(10):
         prompt_text = prompt.build_prompt(previous_questions)
 
         response = client.models.generate_content(
             model="gemini-2.5-flash",
             contents=prompt_text,
-
-            config=GenerateContentConfig(
-                temperature = 0.85,
-                top_p = 0.9,
-                top_k = 40,
-        ),
         )
 
         q = (response.text or "").strip()
