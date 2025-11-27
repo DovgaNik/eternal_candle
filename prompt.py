@@ -57,7 +57,7 @@ def get_prompt(previous_questions: Optional[List[str]] = None) -> str:
             recent_block += f"- {q}\n"
 
     prompt = f"""
-    You are a creative writer designing ONE question for a couples reflection app (similar in spirit to Candle).
+You are a creative writer designing ONE question for a couples reflection app (similar in spirit to Candle).
 
 Two partners will answer separately, then see each other's responses. The question must feel warm, clear, and interesting to answer in 1–3 sentences.
 
@@ -108,9 +108,11 @@ Here are some questions you have generated before. Do not reuse their ideas, met
    - Vary the opening structure: do **not** always start with “What”, “When”, or “Would you rather”.
    - Make it clearly different in topic, scenario, and phrasing from the recent questions listed above.
 
+All of the rules are given to guide and hint you, as well as categories and other parameters. They give you hints and randomness and you can infer whatever ideas and questions that can be produced as long as they are simmilar to the ones produced by the Candle application.
+
 ### CONSTRAINTS
 
-- Maximum 30 words.
+- Maximum 25 words.
 - Exactly ONE question sentence.
 - Address the couple, their shared experience, or their individual lives in a way that still makes sense in a couple’s context.
 - Natural, emotionally intelligent, modern language — not generic, not overly poetic.
