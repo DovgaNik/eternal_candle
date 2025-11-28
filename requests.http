@@ -1,0 +1,9 @@
+### Generate a new question
+GET localhost:5000/gen-question
+
+# Example response
+#{
+#  "question_body": "How does the imagined triumph of courage sometimes amplify the fear of its actual demand?",
+#  "question_explanation": "This question explores the tension between an imagined, ideal self or scenario and the daunting reality of bringing it to fruition, focusing on the fear of one's own potential for courage.",
+#  "question_id": "35f2b06d-db17-462f-826a-6dc6446468b3"
+#}

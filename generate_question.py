@@ -4,6 +4,7 @@ from google import genai
 from pydantic import BaseModel, Field
 
 import db
+import models
 import prompt
 
 client = genai.Client(api_key=os.environ['GEMINI_API_KEY'])
@@ -40,7 +41,10 @@ def generate_random_question():
     question = obj.question
     explanation = obj.question_explanation
 
-    return db.insert_question(
+    id = db.insert_question(
         question_body=question,
         question_explanation=explanation,
     )
+
+    question = models.Question(id, question, explanation)
+    return question
