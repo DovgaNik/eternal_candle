@@ -49,7 +49,8 @@ def get_latest_questions(limit: int = 25, page: int = 1):
             SELECT *
             FROM questions
             ORDER BY question_timestamp DESC
-            LIMIT %s OFFSET %s; 
+                LIMIT %s
+            OFFSET %s; \
             """
 
     with get_connection() as conn:
@@ -64,3 +65,20 @@ def get_latest_questions(limit: int = 25, page: int = 1):
             models.QuestionResponse(question_id, body, explanation, timestamp, resp_iubi, resp_iubit, resp_iubi_ts,
                                     resp_iubit_ts))
     return questions
+
+
+def get_question(question_id):
+    query = """
+            SELECT *
+            FROM questions
+            WHERE question_id = %s
+            """
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, [question_id])
+            row = cur.fetchone()
+            question_id, body, explanation, timestamp, resp_iubi, resp_iubit, resp_iubi_ts, resp_iubit_ts = row
+            return models.QuestionResponse(question_id, body, explanation, timestamp, resp_iubi, resp_iubit,
+                                           resp_iubi_ts,
+                                           resp_iubit_ts)

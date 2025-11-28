@@ -11,3 +11,7 @@ GET localhost:5000/gen-question
 ### Latest questions
 
 GET localhost:5000/latest?limit=5&page=1
+
+### A question
+
+GET localhost:5000/question?question_id=35f2b06d-db17-462f-826a-6dc6446468b3
