@@ -1,63 +1,42 @@
 import os
-from pathlib import Path
 
 from google import genai
+from pydantic import BaseModel, Field
 
+import db
 import prompt
-
-QUESTIONS_FILE = Path("data/questions.txt")
 
 client = genai.Client(api_key=os.environ['GEMINI_API_KEY'])
 
 
-def load_recent_questions(limit: int = 50) -> list[str]:
-    if not QUESTIONS_FILE.exists():
-        return []
-
-    with QUESTIONS_FILE.open("r", encoding="utf-8") as f:
-        lines = [line.strip() for line in f.readlines() if line.strip()]
-
-    if not lines:
-        return []
-
-    return lines[-limit:]
+class CandleQuestion(BaseModel):
+    question_explanation: str = Field(
+        description="Short explanation of what the question aims to explore."
+    )
+    question: str = Field(
+        description="A Candle-style reflective question, max 25 words."
+    )
 
 
-def append_questions(new_questions: list[str]) -> None:
-    if not new_questions:
-        return
-
-    QUESTIONS_FILE.parent.mkdir(parents=True, exist_ok=True)
-    with QUESTIONS_FILE.open("a", encoding="utf-8") as f:
-        for q in new_questions:
-            q = q.strip()
-            if q:
-                f.write(q + "\n")
-
-
-def main():
-    previous_questions = load_recent_questions(limit=50)
-
-    generated_now: list[str] = []
-
-    for i in range(10):
-        prompt_text = prompt.build_prompt(previous_questions)
-
+for i in range(5):
+    for _ in range(5):
         response = client.models.generate_content(
             model="gemini-2.5-flash",
-            contents=prompt_text,
+            contents=prompt.build_prompt(),
+            config={
+                "response_mime_type": "application/json",
+                "response_json_schema": CandleQuestion.model_json_schema(),
+            },
         )
 
-        q = (response.text or "").strip()
-        if not q:
-            continue
+        text = (response.text or "").strip()
+        print(text)
 
-        print(q)
-        generated_now.append(q)
-        previous_questions.append(q)
+        obj = CandleQuestion.model_validate_json(text)
+        question = obj.question
+        explanation = obj.question_explanation
 
-    append_questions(generated_now)
-
-
-if __name__ == "__main__":
-    main()
+        db.insert_question(
+            question_body=question,
+            question_explanation=explanation,
+        )
