@@ -21,11 +21,15 @@ class CandleQuestion(BaseModel):
 
 def generate_random_question():
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-2.5-pro",
         contents=prompt.build_prompt(),
         config={
             "response_mime_type": "application/json",
             "response_json_schema": CandleQuestion.model_json_schema(),
+            "temperature": 0.5,
+            "top_p": 0.6,
+            "top_k": 30,
+            "candidate_count": 1,
         },
     )
 

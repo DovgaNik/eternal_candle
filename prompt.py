@@ -10,10 +10,10 @@ def get_str_recent(n):
 def build_prompt():
     prompt = f"""
 Your job is to generate questions simmilar in style and purpose as the candle mobile application and its competitors.
-The questions should not be repetitive or similar to the ones that have been generated earlier, to avoid that you are provided with some previously generated questions avoid repeating the same topics, wording, ideas, concepts, question type, question opening, etc. Analyse the questions that are given to you and find what is common between them and avoid whatever that is. Additionally to the common features, the new question should not repeat any individual questions aspects neither the same way as it should not repeat the general aspects of questions in general:
+The questions must not be repetitive, you are provided with a list of previously generated questions. You must analyse the questions provided and see what is common between some of them and avoid that. For example, similar ideas, similar topics, similar question types, similar first word of the question and opening(for example if multiple questions start with when you must avoid using that type of question).:
 {get_str_recent(15)}
 
-As well as that, you are introduced with a source of randomness, a paragraph from a romanian story. It will allow you to infer some context or a distant idea that shouldn't be present in the question itself but you can develop it into something that can be used in a Candle-style question:
+As well as that, you are introduced with a source of randomness, a paragraph from a romanian story. It will allow you to infer some context or a distant idea that mustn't be present in the question itself but you can develop it into something that can be used in a Candle-style question. THE QUESTIONS MUST BE IN THE STYLE OF THE ONES PRESENT IN CANDLE APPLICATION!!!!!!!!!!!!
 {random_string.get_random_paragraph()}
     """
     return prompt
