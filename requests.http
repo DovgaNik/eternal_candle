@@ -23,3 +23,8 @@ Cookie: auth_key=IAM
 
 PUT localhost:5000/response?question_id=5b700774-de58-49e7-a7bc-5cd74e84bda0&question_response=My beloved girl
 Cookie: auth_key=IAM
+
+### cine sunt
+
+GET localhost:5000/cine-sunt
+Cookie: auth_key=IAM

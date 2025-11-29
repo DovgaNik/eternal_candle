@@ -70,6 +70,16 @@ def respond():
             return "Something went wrong tell me pls", 500
     return None
 
+@app.get("/cine-sunt")
+@require_auth
+def cine_sunt():
+    auth_key = request.cookies.get("auth_key")
+    if auth_key == IUBI_KEY:
+        return jsonify("iubi")
+    if auth_key == IUBIT_KEY:
+        return jsonify("iubit")
+    return None
+
 
 if __name__ == "__main__":
     app.run(debug=True)
