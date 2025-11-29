@@ -1,5 +1,6 @@
 ### Generate a new question
-GET localhost:5000/gen-question
+POST localhost:5000/gen-question
+Cookie: auth_key=IAM
 
 # Example response
 #{
@@ -11,7 +12,14 @@ GET localhost:5000/gen-question
 ### Latest questions
 
 GET localhost:5000/latest?limit=5&page=1
+Cookie: auth_key=IAM
 
 ### A question
 
-GET localhost:5000/question?question_id=35f2b06d-db17-462f-826a-6dc6446468b3
+GET localhost:5000/question?question_id=5b700774-de58-49e7-a7bc-5cd74e84bda0
+Cookie: auth_key=IAM
+
+### Respond
+
+PUT localhost:5000/response?question_id=5b700774-de58-49e7-a7bc-5cd74e84bda0&question_response=My beloved girl
+Cookie: auth_key=IAM

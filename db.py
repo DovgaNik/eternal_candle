@@ -82,3 +82,36 @@ def get_question(question_id):
             return models.QuestionResponse(question_id, body, explanation, timestamp, resp_iubi, resp_iubit,
                                            resp_iubi_ts,
                                            resp_iubit_ts)
+
+def update_iubi_response(question_id: str, response: str):
+    query = """
+            UPDATE questions
+            SET response_iubita    = %s,
+                response_iubita_ts = NOW()
+            WHERE question_id = %s RETURNING question_id; \
+            """
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, (response, question_id))
+            updated = cur.fetchone()
+        conn.commit()
+
+    return updated is not None
+
+
+def update_iubit_response(question_id: str, response: str):
+    query = """
+            UPDATE questions
+            SET response_iubitul    = %s,
+                response_iubitul_ts = NOW()
+            WHERE question_id = %s RETURNING question_id;
+            """
+
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(query, (response, question_id))
+            updated = cur.fetchone()
+        conn.commit()
+
+    return updated is not None
